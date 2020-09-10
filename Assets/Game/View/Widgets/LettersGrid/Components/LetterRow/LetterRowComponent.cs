@@ -10,4 +10,9 @@ public class LetterRowComponent : MonoBehaviour
     {
         letters[x].SetLetter(newLetter);
     }
+
+    public void SetLetterPosition(int x, int y)
+    {
+        letters[x].SetPosition(x, y);
+    }
 }

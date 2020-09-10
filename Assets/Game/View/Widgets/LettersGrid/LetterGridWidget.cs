@@ -29,6 +29,7 @@ public class LetterGridWidget : MonoBehaviour, ILetterGridWidget
             for (int x = 0; x < 12; x++)
             {
                 letterRows[y].SetLetterInPosition(x, letterGridData.GetLeterInPosition(x, y));
+                letterRows[y].SetLetterPosition(x, y);
             }
         }
     }
