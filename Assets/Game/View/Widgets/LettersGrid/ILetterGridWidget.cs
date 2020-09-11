@@ -3,5 +3,5 @@
 public interface ILetterGridWidget
 {
     void Load();
-    void SetGrid(LetterGridData letterGridData);
+    void SetGrid(DataGrid letterGridData);
 }

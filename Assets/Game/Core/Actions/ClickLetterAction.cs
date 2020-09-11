@@ -48,19 +48,6 @@ public static class Actions
     public static ClickLetterAction ClickLetterAction => clickLetterAction ?? (clickLetterAction = new ClickLetterAction(new InMemoryLetters()));
 }
 
-
-public class Position
-{
-    public int x { get; }
-    public int y { get; }
-
-    public Position(int x, int y)
-    {
-        this.x = x;
-        this.y = y;
-    }
-}
-
 public class LetterData
 {
     public Position Position { get; }

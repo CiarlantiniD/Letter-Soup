@@ -22,7 +22,7 @@ public class LetterGridWidget : MonoBehaviour, ILetterGridWidget
         presenter.Load();
     }
 
-    public void SetGrid(LetterGridData letterGridData)
+    public void SetGrid(DataGrid letterGridData)
     {
         for (int y = 0; y < 12; y++)
         {
