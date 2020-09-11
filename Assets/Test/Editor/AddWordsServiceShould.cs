@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
-using UnityEngine.TestTools;
 
 namespace Tests
 {
@@ -10,15 +9,17 @@ namespace Tests
     {
         private AddWordsService addWordsService;
         private Words wordsRepository;
-        private SomeRandomPositionGenerator ramdomPositionGenerator;
+        private SomeRandomQueuedPositionGenerator ramdomPositionGenerator;
         private IShuffleWordsService shuffleWordsService;
+
+        private static string SomeWord = "SomeWord";
 
         [SetUp]
         public void Setup()
         {
             wordsRepository = new InMemoryWordsRepository();
            
-            ramdomPositionGenerator = new SomeRandomPositionGenerator();
+            ramdomPositionGenerator = new SomeRandomQueuedPositionGenerator();
             shuffleWordsService = new SomeShuffleWordsService();
 
             addWordsService = new AddWordsService(wordsRepository, ramdomPositionGenerator, shuffleWordsService);
@@ -37,7 +38,7 @@ namespace Tests
             var result = addWordsService.AddWords(grid, 1);
 
             // Then
-            PrintGrid(result);
+            PrintGrid.Print(result);
             Assert.IsTrue(result.GetLeterInPosition(0, 0) == 'U');
             Assert.IsTrue(result.GetLeterInPosition(1, 0) == 'n');
             Assert.IsTrue(result.GetLeterInPosition(2, 0) == 'o');
@@ -57,72 +58,152 @@ namespace Tests
             var result = addWordsService.AddWords(grid, 1);
 
             // Then
-            PrintGrid(result);
+
+            PrintGrid.Print(result);
             Assert.IsTrue(result.GetLeterInPosition(5, 5) == 'U');
             Assert.IsTrue(result.GetLeterInPosition(6, 5) == 'n');
             Assert.IsTrue(result.GetLeterInPosition(7, 5) == 'o');
         }
 
-        private void PrintGrid(DataGrid dataGrid)
+        [Test]
+        public void Add_Words_Successfully_In_Random_Positions()
         {
-            string log = string.Empty;
-
-            for (int x = -1; x < dataGrid.Wight; x++)
-            {
-                if(x == -1)
-                {
-                    log += "--";
-                    continue;
-                }
-
-                log += " " + x + "  ";
-            }
-
-            Debug.Log("   " + log);
-
-            for (int y = 0; y < dataGrid.Height; y++)
-            {
-                log = string.Empty;
-
-                for (int x = 0; x < dataGrid.Wight; x++)
-                {
-                    char charToPrint = dataGrid.GetLeterInPosition(x, y);
-
-                    if (charToPrint == '\0')
-                        charToPrint = '_';
-
-                    log += "(" + charToPrint + ") ";
-                }
-
-                Debug.Log(y + ". " + log);
-            }
-        }
-
-
-        private void AddWordsToMemory()
-        {
+            // Given
+            var grid = new DataGrid(new char[10, 10]);
             wordsRepository.Add(new Word("Uno"));
             wordsRepository.Add(new Word("Dos"));
-            wordsRepository.Add(new Word("Tres"));
-            wordsRepository.Add(new Word("Cuatro"));
-            wordsRepository.Add(new Word("Cinco"));
-            wordsRepository.Add(new Word("Seis"));
-            wordsRepository.Add(new Word("Siete"));
-            wordsRepository.Add(new Word("Ocho"));
-            wordsRepository.Add(new Word("Nueve"));
-            wordsRepository.Add(new Word("Diez"));
+            ramdomPositionGenerator.SetMaxPosition(new Position(10, 10));
+            ramdomPositionGenerator.SetReturnPosition(new Position(5, 5));
+            ramdomPositionGenerator.SetReturnPosition(new Position(5, 6));
+
+            // When
+            var result = addWordsService.AddWords(grid, 2);
+
+            // Then
+            PrintGrid.Print(result);
+            Assert.IsTrue(result.GetLeterInPosition(5, 5) == 'U');
+            Assert.IsTrue(result.GetLeterInPosition(6, 5) == 'n');
+            Assert.IsTrue(result.GetLeterInPosition(7, 5) == 'o');
+            Assert.IsTrue(result.GetLeterInPosition(5, 6) == 'D');
+            Assert.IsTrue(result.GetLeterInPosition(6, 6) == 'o');
+            Assert.IsTrue(result.GetLeterInPosition(7, 6) == 's');
         }
 
-
-
-        public class SomeRandomPositionGenerator : IRamdomPositionGenerator
+        [Test]
+        public void Repositioning_Word_Wiht_New_Position_When_Space_Have_A_Word_In()
         {
-            private Position position;
+            // Given
+            var grid = new DataGrid(new char[10, 10]);
+            wordsRepository.Add(new Word("Uno"));
+            wordsRepository.Add(new Word("Dos"));
+            ramdomPositionGenerator.SetMaxPosition(new Position(10, 10));
+            ramdomPositionGenerator.SetReturnPosition(new Position(5, 5));
+            ramdomPositionGenerator.SetReturnPosition(new Position(3, 5));
+
+            // When
+            var result = addWordsService.AddWords(grid, 2);
+
+            // Then
+            PrintGrid.Print(result);
+            Assert.IsTrue(result.GetLeterInPosition(5, 5) == 'U');
+            Assert.IsTrue(result.GetLeterInPosition(6, 5) == 'n');
+            Assert.IsTrue(result.GetLeterInPosition(7, 5) == 'o');
+            Assert.IsTrue(result.GetLeterInPosition(0, 6) == 'D');
+            Assert.IsTrue(result.GetLeterInPosition(1, 6) == 'o');
+            Assert.IsTrue(result.GetLeterInPosition(2, 6) == 's');
+            Assert.IsTrue(ramdomPositionGenerator.Count == 0);
+        }
+
+        [Test]
+        public void Repositioning_Word_Wiht_New_Position_When_Word_Do_Not_Fit_In_Grid()
+        {
+            // Given
+            var grid = new DataGrid(new char[10, 10]);
+            wordsRepository.Add(new Word("Uno"));
+            ramdomPositionGenerator.SetMaxPosition(new Position(10, 10));
+            ramdomPositionGenerator.SetReturnPosition(new Position(8, 5));
+
+            // When
+            var result = addWordsService.AddWords(grid, 1);
+
+            // Then
+            PrintGrid.Print(result);
+            Assert.IsTrue(result.GetLeterInPosition(0, 6) == 'U');
+            Assert.IsTrue(result.GetLeterInPosition(1, 6) == 'n');
+            Assert.IsTrue(result.GetLeterInPosition(2, 6) == 'o');
+            Assert.IsTrue(ramdomPositionGenerator.Count == 0);
+        }
+
+        [Test]
+        public void Throw_FullFillGridException_When_Grid_Is_Full()
+        {
+            // Given
+            var grid = new DataGrid(new char[10, 10]);
+            wordsRepository.Add(new Word("0123456789"));
+            wordsRepository.Add(new Word("0123456789"));
+            wordsRepository.Add(new Word("0123456789"));
+            wordsRepository.Add(new Word("0123456789"));
+            wordsRepository.Add(new Word("0123456789"));
+            wordsRepository.Add(new Word("0123456789"));
+            wordsRepository.Add(new Word("0123456789"));
+            wordsRepository.Add(new Word("0123456789"));
+            wordsRepository.Add(new Word("0123456789"));
+            wordsRepository.Add(new Word("0123456789"));
+            wordsRepository.Add(new Word("error"));
+            ramdomPositionGenerator.SetMaxPosition(new Position(10, 10));
+            ramdomPositionGenerator.SetReturnPosition(new Position(0, 0));
+            ramdomPositionGenerator.SetReturnPosition(new Position(0, 1));
+            ramdomPositionGenerator.SetReturnPosition(new Position(0, 2));
+            ramdomPositionGenerator.SetReturnPosition(new Position(0, 3));
+            ramdomPositionGenerator.SetReturnPosition(new Position(0, 4));
+            ramdomPositionGenerator.SetReturnPosition(new Position(0, 5));
+            ramdomPositionGenerator.SetReturnPosition(new Position(0, 6));
+            ramdomPositionGenerator.SetReturnPosition(new Position(0, 7));
+            ramdomPositionGenerator.SetReturnPosition(new Position(0, 8));
+            ramdomPositionGenerator.SetReturnPosition(new Position(0, 9));
+
+            // When - Then
+            addWordsService.AddWords(grid, 10);
+            //Assert.Throws<FullFillGridException>(() => { addWordsService.AddWords(grid, 10); } );
+        }
+
+        [Test]
+        public void Limit_List_Of_Words()
+        {
+            // Given
+            var grid = new DataGrid(new char[10, 10]);
+            wordsRepository.Add(new Word(SomeWord));
+            wordsRepository.Add(new Word(SomeWord));
+            wordsRepository.Add(new Word(SomeWord));
+            wordsRepository.Add(new Word(SomeWord));
+            wordsRepository.Add(new Word(SomeWord));
+            ramdomPositionGenerator.SetMaxPosition(new Position(10, 10));
+            ramdomPositionGenerator.SetReturnPosition(new Position(0, 0));
+            ramdomPositionGenerator.SetReturnPosition(new Position(0, 1));
+            ramdomPositionGenerator.SetReturnPosition(new Position(0, 2));
+            ramdomPositionGenerator.SetReturnPosition(new Position(0, 3));
+            ramdomPositionGenerator.SetReturnPosition(new Position(0, 4));
+
+            // When
+            var result = addWordsService.AddWords(grid, 3);
+
+            // Then
+            PrintGrid.Print(result);
+            Assert.IsTrue(ramdomPositionGenerator.Count == 2);
+        }
+
+        //---------------------------
+
+        public class SomeRandomQueuedPositionGenerator : IRamdomPositionGenerator
+        {
+            private Queue<Position> positions = new Queue<Position>();
             private Position maxPosition;
+
+            public int Count => positions.Count;
 
             public Position GetRandomPosition()
             {
-                return position;
+                return positions.Dequeue();
             }
 
             public void SetMaxPosition(Position position)
@@ -135,7 +216,7 @@ namespace Tests
                 if (position.x > maxPosition.x || position.y > maxPosition.y)
                     throw new System.Exception("Posicion invalida");
 
-                this.position = position;
+                positions.Enqueue(position);
             }
         }
 

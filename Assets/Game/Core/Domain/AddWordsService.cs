@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System;
 
 public class AddWordsService
 {
@@ -7,6 +8,8 @@ public class AddWordsService
     private readonly IShuffleWordsService shuffleWordsService;
 
     private DataGrid newDataGrid;
+
+    private const char EMPTY_SPACE = '\0';
 
     public AddWordsService(Words wordsRepository, IRamdomPositionGenerator ramdomPositionGenerator, IShuffleWordsService shuffleWordsService)
     {
@@ -22,22 +25,20 @@ public class AddWordsService
 
         var listOfWords = wordsRepository.GetAll();
         listOfWords = shuffleWordsService.Shuffle(listOfWords);
-        listOfWords.RemoveRange(wordsForGrid, listOfWords.Count-1);
+
+        if(wordsForGrid < listOfWords.Count)
+        {
+            int toremover = listOfWords.Count - wordsForGrid;
+            listOfWords.RemoveRange(wordsForGrid, toremover);
+        }
+            
 
         foreach (var word in listOfWords)
         {
-            Position randomPosition = default;
+            Position randomPosition = ramdomPositionGenerator.GetRandomPosition();
 
-            for (int i = 0; i < 100; i++) // Revisar
-            {
-                randomPosition = ramdomPositionGenerator.GetRandomPosition();
-
-                if (CheckIfValidPlaceForWord(randomPosition, word))
-                    break;
-
-                if (i == 100)
-                    throw new System.Exception("Se pudrio todo");
-            }
+            if (CheckIfValidPlaceForWord(randomPosition, word) == false)
+                randomPosition = RepositingWord(randomPosition, word);
 
             AddWordToGrid(randomPosition, word);
         }
@@ -45,11 +46,48 @@ public class AddWordsService
         return newDataGrid;
     }
 
+    private Position RepositingWord(Position initialPosition, Word word)
+    {
+        Position position;
+        int x = initialPosition.x;
+
+        for (int y = initialPosition.y; y < newDataGrid.Height; y++)
+        {
+            for (; x < newDataGrid.Wight; x++)
+            {
+                position = new Position(x, y);
+
+                if (CheckIfValidPlaceForWord(position, word))
+                    return position;
+            }
+            x = 0;
+        }
+
+        for (int y = 0; y < newDataGrid.Height; y++)
+        {
+            for (; x < newDataGrid.Wight; x++)
+            {
+                position = new Position(x, y);
+
+                if (CheckIfValidPlaceForWord(position, word))
+                    return position;
+            }
+        }
+
+        throw new FullFillGridException();
+    }
+
     private bool CheckIfValidPlaceForWord(Position position, Word word)
     {
         var maxPositionOfNewWord = position.x + word.Lenght;
         if (newDataGrid.Wight < maxPositionOfNewWord)
             return false;
+
+        for (int x = position.x; x < maxPositionOfNewWord; x++)
+        {
+            if (newDataGrid.GetLeterInPosition(x, position.y) != EMPTY_SPACE)
+                return false;
+        }
 
         return true;
     }
