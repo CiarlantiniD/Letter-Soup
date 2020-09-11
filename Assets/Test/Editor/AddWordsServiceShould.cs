@@ -1,11 +1,10 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 
 namespace Tests
 {
-    public class AddWordsServiceShould
+    public partial class AddWordsServiceShould
     {
         private AddWordsService addWordsService;
         private Words wordsRepository;
@@ -190,42 +189,6 @@ namespace Tests
             // Then
             PrintGrid.Print(result);
             Assert.IsTrue(ramdomPositionGenerator.Count == 2);
-        }
-
-        //---------------------------
-
-        public class SomeRandomQueuedPositionGenerator : IRamdomPositionGenerator
-        {
-            private Queue<Position> positions = new Queue<Position>();
-            private Position maxPosition;
-
-            public int Count => positions.Count;
-
-            public Position GetRandomPosition()
-            {
-                return positions.Dequeue();
-            }
-
-            public void SetMaxPosition(Position position)
-            {
-                maxPosition = position;
-            }
-
-            public void SetReturnPosition(Position position)
-            {
-                if (position.x > maxPosition.x || position.y > maxPosition.y)
-                    throw new System.Exception("Posicion invalida");
-
-                positions.Enqueue(position);
-            }
-        }
-
-        public class SomeShuffleWordsService : IShuffleWordsService
-        {
-            public List<Word> Shuffle(List<Word> words)
-            {
-                return words;
-            }
         }
     }
 }
