@@ -4,9 +4,7 @@ public class AddWordsService
 {
     private readonly IRamdomPositionGenerator ramdomPositionGenerator;
 
-    private Grid newGrid;
-
-    private const char EMPTY_SPACE = '\0';
+    private Grid newGrid;  
 
     public AddWordsService(IRamdomPositionGenerator ramdomPositionGenerator)
     {
@@ -70,7 +68,7 @@ public class AddWordsService
 
         for (int x = position.x; x < maxPositionOfNewWord; x++)
         {
-            if (newGrid.GetLeterInPosition(x, position.y) != EMPTY_SPACE)
+            if (newGrid.GetLeterInPosition(x, position.y) != SpecialLetters.EMPTY_SPACE)
                 return false;
         }
 

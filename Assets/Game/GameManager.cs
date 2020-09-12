@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    private static ClickLetterAction clickLetterAction;
+
     void Start()
     {
         

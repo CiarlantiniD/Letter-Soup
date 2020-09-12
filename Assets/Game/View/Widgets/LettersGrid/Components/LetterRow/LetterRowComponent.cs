@@ -13,6 +13,6 @@ public class LetterRowComponent : MonoBehaviour
 
     public void SetLetterPosition(int x, int y)
     {
-        letters[x].SetPosition(x, y);
+        letters[x].Load(x, y);
     }
 }

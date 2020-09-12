@@ -15,15 +15,12 @@ public class LetterComponent : MonoBehaviour
     private int x;
     private int y;
 
-    private void Start()
-    {
-        button.onClick.AddListener(ClickLetter);
-    }
-
-    public void SetPosition(int x, int y)
+    public void Load(int x, int y)
     {
         this.x = x;
         this.y = y;
+
+        button.onClick.AddListener(ClickLetter);
     }
 
     public void SetLetter(char newLetter)
@@ -33,7 +30,7 @@ public class LetterComponent : MonoBehaviour
 
     private void ClickLetter()
     {
-        TypeClickLetter currentState = Actions.ClickLetterAction.ClickLetterInPosition(x, y);
+        TypeClickLetter currentState = ActionsProvider.ClickLetterAction.Execute(x, y);
 
         switch (currentState)
         {
