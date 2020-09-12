@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-public class InMemoryWordsRepository : Words
+public class InMemoryWordsRepository : IWordsRepository
 {
     public List<Word> repository = new List<Word>();
 

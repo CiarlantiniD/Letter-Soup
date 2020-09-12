@@ -29,6 +29,6 @@ public class LetterGridWidgetPresenter
             {'u','s','f','w','d','s','e','s','f','y','w','d' }
         };
 
-        view.SetGrid(new DataGrid(data));
+        view.SetGrid(new Grid(data));
     }
 }

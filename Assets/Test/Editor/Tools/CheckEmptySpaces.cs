@@ -4,7 +4,7 @@ namespace Tests
 {
     public static class CheckEmptySpaces
     {
-        public static bool Check(DataGrid dataGrid)
+        public static bool Check(Grid dataGrid)
         {
             for (int y = 0; y < dataGrid.Height; y++)
             {

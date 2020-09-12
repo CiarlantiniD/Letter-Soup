@@ -6,28 +6,32 @@ using UnityEngine.TestTools;
 
 namespace Tests
 {
-    public class GenerateGridWithWordsActionShould
+    public class GenerateNewGameActionShould
     {
-        private GenerateGridWithWordsAction action;
+        private GenerateNewGameAction action;
 
         private AddWordsService addWordsService;
         private FillGridService fillGridService;
 
-        private Words wordsRepository;
         private SomeRandomQueuedPositionGenerator ramdomPositionGenerator;
         private IShuffleWordsService shuffleWordsService;
+        private IGameRepository gameRepository;
+        private IWordsRepository wordsRepository;
+
+        private static string SomeWord = "SomeWord";
 
         [SetUp]
         public void Setup()
         {
-            fillGridService = new FillGridService();
-
-            wordsRepository = new InMemoryWordsRepository();
             ramdomPositionGenerator = new SomeRandomQueuedPositionGenerator();
-            shuffleWordsService = new SomeShuffleWordsService();
-            addWordsService = new AddWordsService(wordsRepository, ramdomPositionGenerator, shuffleWordsService);
+            addWordsService = new AddWordsService(ramdomPositionGenerator);
 
-            action = new GenerateGridWithWordsAction(addWordsService, fillGridService);
+            fillGridService = new FillGridService();
+            shuffleWordsService = new SomeShuffleWordsService();
+            gameRepository = new InMemoryGame();
+            wordsRepository = new InMemoryWordsRepository();
+
+            action = new GenerateNewGameAction(addWordsService, fillGridService, shuffleWordsService, gameRepository, wordsRepository);
         }
 
         [Test]
@@ -47,9 +51,11 @@ namespace Tests
             ramdomPositionGenerator.SetReturnPosition(new Position(4, 4));
 
             // When
-            var result = action.Execute(9, 9, 5);
+            action.Execute(9, 9, 5);
 
             // Then
+            var result = gameRepository.Get().Grid;
+
             PrintGrid.Print(result);
             Assert.IsTrue(result.GetLeterInPosition(0, 0) == 'U');
             Assert.IsTrue(result.GetLeterInPosition(1, 0) == 'n');
@@ -80,6 +86,30 @@ namespace Tests
             Assert.IsTrue(CheckEmptySpaces.Check(result));
 
             Assert.IsTrue(ramdomPositionGenerator.Count == 0);
+        }
+
+        [Test]
+        public void Limit_List_Of_Words()
+        {
+            // Given
+            wordsRepository.Add(new Word(SomeWord));
+            wordsRepository.Add(new Word(SomeWord));
+            wordsRepository.Add(new Word(SomeWord));
+            wordsRepository.Add(new Word(SomeWord));
+            wordsRepository.Add(new Word(SomeWord));
+
+            ramdomPositionGenerator.SetMaxPosition(new Position(10, 10));
+            ramdomPositionGenerator.SetReturnPosition(new Position(0, 0));
+            ramdomPositionGenerator.SetReturnPosition(new Position(1, 1));
+            ramdomPositionGenerator.SetReturnPosition(new Position(2, 2));
+            ramdomPositionGenerator.SetReturnPosition(new Position(3, 3));
+            ramdomPositionGenerator.SetReturnPosition(new Position(4, 4));
+
+            // When
+            action.Execute(10, 10, 3);
+
+            //// Then
+            Assert.IsTrue(ramdomPositionGenerator.Count == 2);
         }
     }
 }

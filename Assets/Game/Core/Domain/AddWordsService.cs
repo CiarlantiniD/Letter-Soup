@@ -1,39 +1,24 @@
-﻿using System.Collections;
-using System;
+﻿using System.Collections.Generic;
 
 public class AddWordsService
 {
-    private readonly Words wordsRepository;
     private readonly IRamdomPositionGenerator ramdomPositionGenerator;
-    private readonly IShuffleWordsService shuffleWordsService;
 
-    private DataGrid newDataGrid;
+    private Grid newGrid;
 
     private const char EMPTY_SPACE = '\0';
 
-    public AddWordsService(Words wordsRepository, IRamdomPositionGenerator ramdomPositionGenerator, IShuffleWordsService shuffleWordsService)
+    public AddWordsService(IRamdomPositionGenerator ramdomPositionGenerator)
     {
-        this.wordsRepository = wordsRepository;
         this.ramdomPositionGenerator = ramdomPositionGenerator;
-        this.shuffleWordsService = shuffleWordsService;
     }
 
-    public DataGrid AddWords(DataGrid dataGrid, int wordsForGrid)
+    public Grid AddWords(Grid grid, List<Word> words)
     {
-        newDataGrid = new DataGrid(new char[dataGrid.Wight, dataGrid.Height]);
-        ramdomPositionGenerator.SetMaxPosition(new Position(dataGrid.Wight, dataGrid.Height));
+        newGrid = new Grid(new char[grid.Wight, grid.Height]);
+        ramdomPositionGenerator.SetMaxPosition(new Position(grid.Wight, grid.Height));            
 
-        var listOfWords = wordsRepository.GetAll();
-        listOfWords = shuffleWordsService.Shuffle(listOfWords);
-
-        if(wordsForGrid < listOfWords.Count)
-        {
-            int toremover = listOfWords.Count - wordsForGrid;
-            listOfWords.RemoveRange(wordsForGrid, toremover);
-        }
-            
-
-        foreach (var word in listOfWords)
+        foreach (var word in words)
         {
             Position randomPosition = ramdomPositionGenerator.GetRandomPosition();
 
@@ -43,7 +28,7 @@ public class AddWordsService
             AddWordToGrid(randomPosition, word);
         }
 
-        return newDataGrid;
+        return newGrid;
     }
 
     private Position RepositingWord(Position initialPosition, Word word)
@@ -51,9 +36,9 @@ public class AddWordsService
         Position position;
         int x = initialPosition.x;
 
-        for (int y = initialPosition.y; y < newDataGrid.Height; y++)
+        for (int y = initialPosition.y; y < newGrid.Height; y++)
         {
-            for (; x < newDataGrid.Wight; x++)
+            for (; x < newGrid.Wight; x++)
             {
                 position = new Position(x, y);
 
@@ -63,9 +48,9 @@ public class AddWordsService
             x = 0;
         }
 
-        for (int y = 0; y < newDataGrid.Height; y++)
+        for (int y = 0; y < newGrid.Height; y++)
         {
-            for (; x < newDataGrid.Wight; x++)
+            for (; x < newGrid.Wight; x++)
             {
                 position = new Position(x, y);
 
@@ -80,12 +65,12 @@ public class AddWordsService
     private bool CheckIfValidPlaceForWord(Position position, Word word)
     {
         var maxPositionOfNewWord = position.x + word.Lenght;
-        if (newDataGrid.Wight < maxPositionOfNewWord)
+        if (newGrid.Wight < maxPositionOfNewWord)
             return false;
 
         for (int x = position.x; x < maxPositionOfNewWord; x++)
         {
-            if (newDataGrid.GetLeterInPosition(x, position.y) != EMPTY_SPACE)
+            if (newGrid.GetLeterInPosition(x, position.y) != EMPTY_SPACE)
                 return false;
         }
 
@@ -94,7 +79,7 @@ public class AddWordsService
 
     private void AddWordToGrid(Position position, Word word)
     {
-        char[,] grid = newDataGrid.Data;
+        char[,] grid = newGrid.Data;
         char[] wordDesglosada = word.Value.ToCharArray();
         var maxPosition = position.x + word.Lenght;
         int count = 0;
@@ -105,7 +90,7 @@ public class AddWordsService
             ++count;
         }
 
-        newDataGrid = new DataGrid(grid);
+        newGrid = new Grid(grid);
     }
 
 }
