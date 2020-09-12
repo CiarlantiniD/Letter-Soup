@@ -7,4 +7,9 @@
     {
         Value = word;
     }
+
+    public char[] ToCharArray()
+    {
+        return Value.ToCharArray();
+    }
 }

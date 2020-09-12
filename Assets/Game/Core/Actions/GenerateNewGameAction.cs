@@ -2,13 +2,13 @@
 
 public class GenerateNewGameAction
 {
-    private readonly AddWordsService addWordsService;
+    private readonly AddWordsLeftToRightService addWordsService;
     private readonly FillGridService fillGridService;
     private readonly IShuffleWordsService shuffleWordsService;
     private readonly IGameRepository game;
     private readonly IWordsRepository words;
 
-    public GenerateNewGameAction(AddWordsService addWordsService, FillGridService fillGridService, IShuffleWordsService shuffleWordsService, IGameRepository game, IWordsRepository words)
+    public GenerateNewGameAction(AddWordsLeftToRightService addWordsService, FillGridService fillGridService, IShuffleWordsService shuffleWordsService, IGameRepository game, IWordsRepository words)
     {
         this.addWordsService = addWordsService;
         this.fillGridService = fillGridService;
@@ -20,7 +20,7 @@ public class GenerateNewGameAction
     public void Execute(int wight, int height, int minWordsForGrid)
     {
         List<Word> wordsForGame = words.GetAll();
-        Grid grid = new Grid(wight, height);
+        LetersGrid grid = new LetersGrid(wight, height);
 
         wordsForGame = shuffleWordsService.Shuffle(wordsForGame);
 

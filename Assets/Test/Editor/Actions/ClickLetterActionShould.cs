@@ -9,12 +9,12 @@ namespace Tests
     public class ClickLetterActionShould
     {
         private ClickLetterAction action;
-        private IPositionSelected repository;
+        private IGameRepository repository;
 
         [SetUp]
         public void Setup()
         {
-            repository = new InMemoryPositionSelected();
+            repository = new InMemoryGame();
             action = new ClickLetterAction(repository);
         }
 

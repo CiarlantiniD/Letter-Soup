@@ -1,36 +1,53 @@
 ﻿using System.Collections.Generic;
 
-public class AddWordsService
+public interface AddWordsService
+{
+    LetersGrid AddWords(LetersGrid grid, List<Word> words);
+}
+
+public class AddWordsLeftToRightService : AddWordsService
 {
     private readonly IRamdomPositionGenerator ramdomPositionGenerator;
 
-    private Grid newGrid;  
+    private LetersGrid newGrid;  
 
-    public AddWordsService(IRamdomPositionGenerator ramdomPositionGenerator)
+    public AddWordsLeftToRightService(IRamdomPositionGenerator ramdomPositionGenerator)
     {
         this.ramdomPositionGenerator = ramdomPositionGenerator;
     }
 
-    public Grid AddWords(Grid grid, List<Word> words)
+    public LetersGrid AddWords(LetersGrid grid, List<Word> words)
     {
-        newGrid = new Grid(new char[grid.Wight, grid.Height]);
+        newGrid = grid;
         ramdomPositionGenerator.SetMaxPosition(new Position(grid.Wight, grid.Height));            
 
         foreach (var word in words)
         {
-            Position randomPosition = ramdomPositionGenerator.GetRandomPosition();
-
-            if (CheckIfValidPlaceForWord(randomPosition, word) == false)
-                randomPosition = RepositingWord(randomPosition, word);
-
-            AddWordToGrid(randomPosition, word);
+            Position initialRandomPosition = ramdomPositionGenerator.GetRandomPosition();
+            List<Position> positions = GetPositions(word, initialRandomPosition);
+            newGrid.AddWord(word, positions);
         }
 
         return newGrid;
     }
 
-    private Position RepositingWord(Position initialPosition, Word word)
+    private List<Position> GetPositions(Word word, Position initialPosition)
     {
+        List<Position> positions = new List<Position>();
+
+        var position = RepositioningInitalPositionIfNeeded(word, initialPosition);
+
+        positions.Add(position);
+        for (int i = 1; i < word.Lenght; i++)
+        {
+            position = new Position(position.x + 1, position.y);
+            positions.Add(position);
+        }
+        return positions;
+    }
+
+    private Position RepositioningInitalPositionIfNeeded(Word word, Position initialPosition)
+    { 
         Position position;
         int x = initialPosition.x;
 
@@ -74,21 +91,4 @@ public class AddWordsService
 
         return true;
     }
-
-    private void AddWordToGrid(Position position, Word word)
-    {
-        char[,] grid = newGrid.Data;
-        char[] wordDesglosada = word.Value.ToCharArray();
-        var maxPosition = position.x + word.Lenght;
-        int count = 0;
-
-        for (int x = position.x; x < maxPosition; x++)
-        {
-            grid[x, position.y] = wordDesglosada[count];
-            ++count;
-        }
-
-        newGrid = new Grid(grid);
-    }
-
 }

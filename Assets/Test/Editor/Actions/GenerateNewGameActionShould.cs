@@ -10,7 +10,7 @@ namespace Tests
     {
         private GenerateNewGameAction action;
 
-        private AddWordsService addWordsService;
+        private AddWordsLeftToRightService addWordsService;
         private FillGridService fillGridService;
 
         private SomeRandomQueuedPositionGenerator ramdomPositionGenerator;
@@ -24,7 +24,7 @@ namespace Tests
         public void Setup()
         {
             ramdomPositionGenerator = new SomeRandomQueuedPositionGenerator();
-            addWordsService = new AddWordsService(ramdomPositionGenerator);
+            addWordsService = new AddWordsLeftToRightService(ramdomPositionGenerator);
 
             fillGridService = new FillGridService();
             shuffleWordsService = new SomeShuffleWordsService();

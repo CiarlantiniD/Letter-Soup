@@ -30,16 +30,6 @@ public class LetterComponent : MonoBehaviour
 
     private void ClickLetter()
     {
-        TypeClickLetter currentState = ActionsProvider.ClickLetterAction.Execute(x, y);
-
-        switch (currentState)
-        {
-            case TypeClickLetter.Select:
-                background.color = typeClickLetterSelected; break;
-            case TypeClickLetter.Unselect:
-                background.color = typeClickLetterUnselected; break;
-            default:
-                background.color = Color.grey; break;
-        }
+        ActionsProvider.ClickLetterAction.Execute(x, y);
     }
 }

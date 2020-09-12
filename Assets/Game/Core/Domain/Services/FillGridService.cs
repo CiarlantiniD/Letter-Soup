@@ -11,7 +11,7 @@ public class FillGridService
     private readonly char[] ABC =
         { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'ñ', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
 
-    public Grid FillGrid(Grid grid)
+    public LetersGrid FillGrid(LetersGrid grid)
     {
         char[,] newGrid = grid.Data;
 
@@ -24,6 +24,6 @@ public class FillGridService
             }
         }
 
-        return new Grid(newGrid);
+        return new LetersGrid(newGrid);
     }
 }

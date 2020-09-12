@@ -9,20 +9,13 @@ public class LetterGridWidget : MonoBehaviour, ILetterGridWidget
 
     private LetterGridWidgetPresenter presenter;
 
-    //Temporal
-    private void Start()
-    {
-        Load();
-    }
-        
-
     public void Load()
     {
         presenter = new LetterGridWidgetPresenter(this);
         presenter.Load();
     }
 
-    public void SetGrid(Grid letterGridData)
+    public void SetGrid(LetersGrid letterGridData)
     {
         for (int y = 0; y < 12; y++)
         {
