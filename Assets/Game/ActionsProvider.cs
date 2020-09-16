@@ -1,21 +1,21 @@
 ﻿
-public static class ActionsProvider
+public class ActionsProvider
 {
-    private static ClickLetterAction clickLetterAction;
-    private static GenerateNewGameAction generateNewGameAction;
-    private static GetLetterGridAction getLetterGridAction;
+    public static ClickLetterAction ClickLetterAction { get; private set; }
+    public static GenerateNewGameAction GenerateNewGameAction { get; private set; }
+    public static GetLetterGridAction GetLetterGridAction { get; private set; }
 
-    public static ClickLetterAction ClickLetterAction =>
-        clickLetterAction ?? (clickLetterAction = new ClickLetterAction(RepositoryProvider.GameRepository));
+    public ActionsProvider()
+    {
+        ClickLetterAction = new ClickLetterAction(RepositoryProvider.GameRepository);
 
-    public static GenerateNewGameAction GenerateNewGameAction =>
-        generateNewGameAction ?? (generateNewGameAction = new GenerateNewGameAction(
+        GenerateNewGameAction = new GenerateNewGameAction(
             ServiceProvider.AddWordsLeftToRightService,
             ServiceProvider.FillGridService,
             ServiceProvider.ShuffleWordsService,
             RepositoryProvider.GameRepository,
-            RepositoryProvider.WordsRepository));
+            RepositoryProvider.WordsRepository);
 
-    public static GetLetterGridAction GetLetterGridAction =>
-        getLetterGridAction ?? (getLetterGridAction = new GetLetterGridAction(RepositoryProvider.GameRepository));
+        GetLetterGridAction = new GetLetterGridAction(RepositoryProvider.GameRepository);
+    }
 }

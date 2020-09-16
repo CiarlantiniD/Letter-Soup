@@ -1,20 +1,16 @@
 ﻿
 public class ServiceProvider
 {
-    private static IRamdomPositionGenerator ramdomPositionGenerator;
-    private static AddWordsLeftToRightService addWordsLeftToRightService;
-    private static FillGridService fillGridService;
-    private static IShuffleWordsService shuffleWordsService;
+    public static IRamdomPositionGenerator RamdomPositionGenerator { get; private set; }
+    public static AddWordsLeftToRightService AddWordsLeftToRightService { get; private set; }
+    public static FillGridService FillGridService { get; private set; }
+    public static IShuffleWordsService ShuffleWordsService { get; private set; }
 
-    public static IRamdomPositionGenerator RamdomPositionGenerator =>
-        ramdomPositionGenerator ?? (ramdomPositionGenerator = new RamdomPositionGenerator());
-
-    public static AddWordsLeftToRightService AddWordsLeftToRightService =>
-        addWordsLeftToRightService ?? (addWordsLeftToRightService = new AddWordsLeftToRightService(ramdomPositionGenerator));
-
-    public static FillGridService FillGridService =>
-        fillGridService ?? (fillGridService = new FillGridService());
-
-    public static IShuffleWordsService ShuffleWordsService =>
-        shuffleWordsService ?? (shuffleWordsService = new ShuffleWordsService());
+    public ServiceProvider()
+    {
+        RamdomPositionGenerator = new RamdomPositionGenerator();
+        AddWordsLeftToRightService = new AddWordsLeftToRightService(RamdomPositionGenerator);
+        FillGridService = new FillGridService();
+        ShuffleWordsService = new ShuffleWordsService();
+    }
 }

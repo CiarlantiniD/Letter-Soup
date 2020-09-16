@@ -1,9 +1,12 @@
 ﻿
-public static class RepositoryProvider
+public class RepositoryProvider
 {
-    private static IGameRepository gameRepository;
-    private static IWordsRepository wordsRepository;
+    public static IGameRepository GameRepository { get; private set; }
+    public static IWordsRepository WordsRepository { get; private set; }
 
-    public static IGameRepository GameRepository => gameRepository ?? (gameRepository = new InMemoryGame());
-    public static IWordsRepository WordsRepository => wordsRepository ?? (wordsRepository = new InMemoryWordsRepository());
+    public RepositoryProvider()
+    {
+        GameRepository = new InMemoryGame();
+        WordsRepository = new InMemoryWordsRepository();
+    }
 }
