@@ -1,25 +1,20 @@
 ﻿using System.Collections;
 using System;
 
-public class ClickLetterAction
+public class SelectLetterAction
 {
     private readonly IGameRepository gameRepository;
 
-    public Action OnFinishClick;
-
-    public ClickLetterAction(IGameRepository gameRepository)
+    public SelectLetterAction(IGameRepository gameRepository)
     {
         this.gameRepository = gameRepository;
     }
 
-    public void Execute(int x, int y)
+    public LetterState Execute(int x, int y)
     {
         Logger.Log("Click  -  ( " + x  + " ; " + y + " )");
-
         Position position = new Position(x, y);
 
-        return;
-
-        OnFinishClick?.Invoke();
+        return gameRepository.Get().SelectPoition(position);
     }
 }

@@ -1,4 +1,5 @@
-﻿public class Position
+﻿
+public class Position
 {
     public int x { get; }
     public int y { get; }
@@ -7,5 +8,10 @@
     {
         this.x = x;
         this.y = y;
+    }
+
+    public bool IsEqual(Position position)
+    {
+        return x == position.x && y == position.y;
     }
 }

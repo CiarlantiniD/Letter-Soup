@@ -1,13 +1,13 @@
 ﻿
 public class ActionsProvider
 {
-    public static ClickLetterAction ClickLetterAction { get; private set; }
+    public static SelectLetterAction ClickLetterAction { get; private set; }
     public static GenerateNewGameAction GenerateNewGameAction { get; private set; }
     public static GetLetterGridAction GetLetterGridAction { get; private set; }
 
     public ActionsProvider()
     {
-        ClickLetterAction = new ClickLetterAction(RepositoryProvider.GameRepository);
+        ClickLetterAction = new SelectLetterAction(RepositoryProvider.GameRepository);
 
         GenerateNewGameAction = new GenerateNewGameAction(
             ServiceProvider.AddWordsLeftToRightService,
