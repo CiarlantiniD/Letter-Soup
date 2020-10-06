@@ -1,15 +1,15 @@
 ﻿
 public class GetLetterGridAction
 {
-    private readonly IGameRepository gameRepository;
+    private readonly IGameService gameService;
 
-    public GetLetterGridAction(IGameRepository gameRepository)
+    public GetLetterGridAction(IGameService gameService)
     {
-        this.gameRepository = gameRepository;
+        this.gameService = gameService;
     }
 
     public LetersGrid Execute()
     {
-        return gameRepository.Get().Grid;
+        return gameService.Grid;
     }
 }

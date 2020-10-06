@@ -3,11 +3,11 @@ using System;
 
 public class SelectLetterAction
 {
-    private readonly IGameRepository gameRepository;
+    private readonly IGameService gameService;
 
-    public SelectLetterAction(IGameRepository gameRepository)
+    public SelectLetterAction(IGameService gameService)
     {
-        this.gameRepository = gameRepository;
+        this.gameService = gameService;
     }
 
     public LetterState Execute(int x, int y)
@@ -15,6 +15,6 @@ public class SelectLetterAction
         Logger.Log("Click  -  ( " + x  + " ; " + y + " )");
         Position position = new Position(x, y);
 
-        return gameRepository.Get().SelectPoition(position);
+        return gameService.SelectLetterPosition(position);
     }
 }

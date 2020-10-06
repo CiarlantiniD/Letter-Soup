@@ -4,14 +4,12 @@ using UnityEngine;
 
 namespace Tests
 {
-    public partial class AddWordsServiceShould
+    public class AddWordsServiceShould
     {
         private AddWordsLeftToRightService addWordsService;
         private IWordsRepository wordsRepository;
         private SomeRandomQueuedPositionGenerator ramdomPositionGenerator;
         private IShuffleWordsService shuffleWordsService;
-
-        private static string SomeWord = "SomeWord";
 
         [SetUp]
         public void Setup()

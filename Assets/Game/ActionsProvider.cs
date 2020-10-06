@@ -7,15 +7,15 @@ public class ActionsProvider
 
     public ActionsProvider()
     {
-        ClickLetterAction = new SelectLetterAction(RepositoryProvider.GameRepository);
+        ClickLetterAction = new SelectLetterAction(ServiceProvider.GameService);
 
         GenerateNewGameAction = new GenerateNewGameAction(
             ServiceProvider.AddWordsLeftToRightService,
             ServiceProvider.FillGridService,
             ServiceProvider.ShuffleWordsService,
-            RepositoryProvider.GameRepository,
+            ServiceProvider.GameService,
             RepositoryProvider.WordsRepository);
 
-        GetLetterGridAction = new GetLetterGridAction(RepositoryProvider.GameRepository);
+        GetLetterGridAction = new GetLetterGridAction(ServiceProvider.GameService);
     }
 }

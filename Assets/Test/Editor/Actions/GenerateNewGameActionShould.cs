@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
+using NSubstitute;
 
 namespace Tests
 {
@@ -15,7 +16,7 @@ namespace Tests
 
         private SomeRandomQueuedPositionGenerator ramdomPositionGenerator;
         private IShuffleWordsService shuffleWordsService;
-        private IGameRepository gameRepository;
+        private IGameService gameService;
         private IWordsRepository wordsRepository;
 
         private static string SomeWord = "SomeWord";
@@ -28,10 +29,10 @@ namespace Tests
 
             fillGridService = new FillGridService();
             shuffleWordsService = new SomeShuffleWordsService();
-            gameRepository = new InMemoryGame();
+            gameService =  Substitute.For<IGameService>();
             wordsRepository = new InMemoryWordsRepository();
 
-            action = new GenerateNewGameAction(addWordsService, fillGridService, shuffleWordsService, gameRepository, wordsRepository);
+            action = new GenerateNewGameAction(addWordsService, fillGridService, shuffleWordsService, gameService, wordsRepository);
         }
 
         [Test]
@@ -54,7 +55,7 @@ namespace Tests
             action.Execute(9, 9, 5);
 
             // Then
-            var result = gameRepository.Get().Grid;
+            var result = gameService.Grid;
 
             PrintGrid.Print(result);
             Assert.IsTrue(result.GetLeterInPosition(0, 0) == 'U');

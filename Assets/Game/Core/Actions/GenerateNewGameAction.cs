@@ -5,15 +5,15 @@ public class GenerateNewGameAction
     private readonly AddWordsLeftToRightService addWordsService;
     private readonly FillGridService fillGridService;
     private readonly IShuffleWordsService shuffleWordsService;
-    private readonly IGameRepository game;
+    private readonly IGameService gameService;
     private readonly IWordsRepository words;
 
-    public GenerateNewGameAction(AddWordsLeftToRightService addWordsService, FillGridService fillGridService, IShuffleWordsService shuffleWordsService, IGameRepository game, IWordsRepository words)
+    public GenerateNewGameAction(AddWordsLeftToRightService addWordsService, FillGridService fillGridService, IShuffleWordsService shuffleWordsService, IGameService gameService, IWordsRepository words)
     {
         this.addWordsService = addWordsService;
         this.fillGridService = fillGridService;
         this.shuffleWordsService = shuffleWordsService;
-        this.game = game;
+        this.gameService = gameService;
         this.words = words;
     }
 
@@ -33,6 +33,6 @@ public class GenerateNewGameAction
         grid = addWordsService.AddWords(grid, wordsForGame);
         grid = fillGridService.FillGrid(grid);
 
-        game.Save(new Game(grid, wordsForGame));
+        gameService.SetNewGame(new Game(grid, wordsForGame));
     }
 }

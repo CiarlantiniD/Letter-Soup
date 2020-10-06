@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
+using NSubstitute;
 
 namespace Tests
 {
     public class SelectLetterActionShould
     {
         private SelectLetterAction action;
-        private IGameRepository repository;
+        private IGameService gameService;
 
         private static int SomeXPosition = 4;
         private static int SomeYPosition = 5;
@@ -35,8 +36,8 @@ namespace Tests
         public void Setup()
         {
             Logger.SetProvider(new UnityLogger());
-            repository = new InMemoryGame();
-            action = new SelectLetterAction(repository);
+            gameService = Substitute.For<IGameService>();
+            action = new SelectLetterAction(gameService);
         }
 
         [Test]
@@ -47,13 +48,13 @@ namespace Tests
             var newLetterGrid = new LetersGrid(new char[10, 10]);
             var newListOfWords = new List<Word>();
             var newGame = new Game(newLetterGrid, newListOfWords);
-            repository.Save(newGame);
+            gameService.SetNewGame(newGame);
 
             // When
             var resutl = action.Execute(SomeXPosition, SomeYPosition);
 
             // Then
-            List<Position> selectedPositions = repository.Get().SelectedPositions;
+            List<Position> selectedPositions = gameService.SelectedPositions;
             Assert.IsTrue(position.IsEqual(selectedPositions[0]));
             Assert.IsTrue(LetterStateType.Selected == resutl.GetState());
         }
@@ -66,14 +67,14 @@ namespace Tests
             var newLetterGrid = new LetersGrid(new char[10, 10]);
             var newListOfWords = new List<Word>();
             var newGame = new Game(newLetterGrid, newListOfWords);
-            repository.Save(newGame);
+            gameService.SetNewGame(newGame);
 
             // When
             action.Execute(SomeXPosition, SomeYPosition);
             var resutl = action.Execute(SomeXPosition, SomeYPosition);
 
             // Then
-            List<Position> selectedPositions = repository.Get().SelectedPositions;
+            List<Position> selectedPositions = gameService.SelectedPositions;
             Assert.IsTrue(selectedPositions.Count == 0);
             Assert.IsTrue(LetterStateType.Unselected == resutl.GetState());
         }
@@ -86,7 +87,7 @@ namespace Tests
             var newLetterGrid = new LetersGrid(new char[10, 10]);
             var newListOfWords = new List<Word>();
             var newGame = new Game(newLetterGrid, newListOfWords);
-            repository.Save(newGame);
+            gameService.SetNewGame(newGame);
 
             // When
             action.Execute(SomeXPosition, SomeYPosition);
@@ -94,7 +95,7 @@ namespace Tests
             var resutl = action.Execute(SomeXPosition, SomeYPosition);
 
             // Then
-            List<Position> selectedPositions = repository.Get().SelectedPositions;
+            List<Position> selectedPositions = gameService.SelectedPositions;
             Assert.IsTrue(position.IsEqual(selectedPositions[0]));
             Assert.IsTrue(LetterStateType.Selected == resutl.GetState());
         }
@@ -108,7 +109,7 @@ namespace Tests
             var newLetterGrid = new LetersGrid(new char[SomeMaxXPosition, SomeMaxYPosition]);
             var newListOfWords = new List<Word>();
             var newGame = new Game(newLetterGrid, newListOfWords);
-            repository.Save(newGame);
+            gameService.SetNewGame(newGame);
 
             // When - Then
             Assert.Throws<UnvalidPositionException>(delegate { action.Execute(SomeXPositionWithError, SomeYPositionWithError); } );
@@ -123,7 +124,7 @@ namespace Tests
             var newLetterGrid = new LetersGrid(new char[SomeMaxXPosition, SomeMaxYPosition]);
             var newListOfWords = new List<Word>();
             var newGame = new Game(newLetterGrid, newListOfWords);
-            repository.Save(newGame);
+            gameService.SetNewGame(newGame);
 
             // When - Then
             Assert.Throws<UnvalidPositionException>(delegate { action.Execute(SomeXPositionWithError, SomeYPositionWithError); });
@@ -145,7 +146,7 @@ namespace Tests
             var newLetterGrid = new LetersGrid(charArray);
             var newListOfWords = new List<Word>();
             var newGame = new Game(newLetterGrid, newListOfWords);
-            repository.Save(newGame);
+            gameService.SetNewGame(newGame);
 
             // When
             action.Execute(0, 0);
@@ -157,7 +158,7 @@ namespace Tests
             var resutl = action.Execute(0, 0);
 
             // Then
-            List<Position> selectedPositions = repository.Get().SelectedPositions;
+            List<Position> selectedPositions = gameService.SelectedPositions;
             //Assert.IsTrue(position.IsEqual(selectedPositions[0]));
             Assert.IsTrue(LetterStateType.Selected == resutl.GetState());
         }
