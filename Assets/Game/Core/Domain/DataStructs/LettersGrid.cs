@@ -6,7 +6,7 @@ public class LetersGrid
     public int Height => Data.GetLength(1);
     public char[,] Data { get; private set; }
 
-    Dictionary<Word, List<Position>> words = new Dictionary<Word, List<Position>>();
+    public Dictionary<Word, List<Position>> Words { get; private set; } = new Dictionary<Word, List<Position>>();
 
     public bool AddWord(Word word, List<Position> positions)
     {
@@ -14,7 +14,7 @@ public class LetersGrid
             return false;
 
         AddWordToGrid(word, positions);
-        words.Add(word, positions);
+        Words.Add(word, positions);
         return true;
     }
 

@@ -17,6 +17,20 @@ namespace Tests
         private static int SomeMaxXPosition = 10;
         private static int SomeMaxYPosition = 10;
 
+        private readonly char [,] SomeCharArray = new char[10, 10]
+            {
+                {'x','x','x','x','x','x','x','x','x','x' },
+                {'x','x','x','x','x','x','x','x','x','x' },
+                {'x','x','x','x','x','x','x','x','x','x' },
+                {'x','x','x','x','x','x','x','x','x','x' },
+                {'x','x','x','x','x','x','x','x','x','x' },
+                {'x','x','x','x','x','x','x','x','x','x' },
+                {'x','x','x','x','x','x','x','x','x','x' },
+                {'x','x','x','x','x','x','x','x','x','x' },
+                {'x','x','x','x','x','x','x','x','x','x' },
+                {'x','x','x','x','x','x','x','x','x','x' }
+            };
+
         [SetUp]
         public void Setup()
         {
@@ -113,6 +127,39 @@ namespace Tests
 
             // When - Then
             Assert.Throws<UnvalidPositionException>(delegate { action.Execute(SomeXPositionWithError, SomeYPositionWithError); });
+        }
+
+        [Test][Ignore("Se tiene que refactorizar para que el test pase")]
+        public void Cancel_Unselect_When_Word_Was_Full_Selected()
+        {
+            // Given
+            Position position = new Position(0, 0);
+            var charArray = SomeCharArray;
+            charArray[0, 0] = 'p';
+            charArray[1, 0] = 'r';
+            charArray[2, 0] = 'u';
+            charArray[3, 0] = 'e';
+            charArray[4, 0] = 'b';
+            charArray[5, 0] = 'a';
+
+            var newLetterGrid = new LetersGrid(charArray);
+            var newListOfWords = new List<Word>();
+            var newGame = new Game(newLetterGrid, newListOfWords);
+            repository.Save(newGame);
+
+            // When
+            action.Execute(0, 0);
+            action.Execute(1, 0);
+            action.Execute(2, 0);
+            action.Execute(3, 0);
+            action.Execute(4, 0);
+            action.Execute(5, 0);
+            var resutl = action.Execute(0, 0);
+
+            // Then
+            List<Position> selectedPositions = repository.Get().SelectedPositions;
+            //Assert.IsTrue(position.IsEqual(selectedPositions[0]));
+            Assert.IsTrue(LetterStateType.Selected == resutl.GetState());
         }
     }
 }
