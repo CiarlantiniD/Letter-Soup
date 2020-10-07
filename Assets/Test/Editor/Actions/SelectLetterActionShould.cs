@@ -9,7 +9,7 @@ namespace Tests
 {
     public class SelectLetterActionShould
     {
-        private SelectLetterAction action;
+        private SelectLetterAction selectLetter;
         private IGameService gameService;
 
         private static int SomeXPosition = 4;
@@ -36,8 +36,8 @@ namespace Tests
         public void Setup()
         {
             Logger.SetProvider(new UnityLogger());
-            gameService = Substitute.For<IGameService>();
-            action = new SelectLetterAction(gameService);
+            gameService = new GameService();
+            selectLetter = new SelectLetterAction(gameService);
         }
 
         [Test]
@@ -45,13 +45,13 @@ namespace Tests
         {
             // Given
             Position position = new Position(SomeXPosition, SomeYPosition);
-            var newLetterGrid = new LetersGrid(new char[10, 10]);
-            var newListOfWords = new List<Word>();
-            var newGame = new Game(newLetterGrid, newListOfWords);
+            var newLetterGrid = new Grid(new char[10, 10]);
+            var newListOfWords = new Dictionary<Word,List<Position>>();
+            var newGame = new GridWithLetters(newLetterGrid, newListOfWords);
             gameService.SetNewGame(newGame);
 
             // When
-            var resutl = action.Execute(SomeXPosition, SomeYPosition);
+            var resutl = selectLetter.Execute(SomeXPosition, SomeYPosition);
 
             // Then
             List<Position> selectedPositions = gameService.SelectedPositions;
@@ -64,14 +64,14 @@ namespace Tests
         {
             // Given
             Position position = new Position(SomeXPosition, SomeYPosition);
-            var newLetterGrid = new LetersGrid(new char[10, 10]);
-            var newListOfWords = new List<Word>();
-            var newGame = new Game(newLetterGrid, newListOfWords);
+            var newLetterGrid = new Grid(new char[10, 10]);
+            var newListOfWords = new Dictionary<Word, List<Position>>();
+            var newGame = new GridWithLetters(newLetterGrid, newListOfWords);
             gameService.SetNewGame(newGame);
 
             // When
-            action.Execute(SomeXPosition, SomeYPosition);
-            var resutl = action.Execute(SomeXPosition, SomeYPosition);
+            selectLetter.Execute(SomeXPosition, SomeYPosition);
+            var resutl = selectLetter.Execute(SomeXPosition, SomeYPosition);
 
             // Then
             List<Position> selectedPositions = gameService.SelectedPositions;
@@ -84,15 +84,15 @@ namespace Tests
         {
             // Given
             Position position = new Position(SomeXPosition, SomeYPosition);
-            var newLetterGrid = new LetersGrid(new char[10, 10]);
-            var newListOfWords = new List<Word>();
-            var newGame = new Game(newLetterGrid, newListOfWords);
+            var newLetterGrid = new Grid(new char[10, 10]);
+            var newListOfWords = new Dictionary<Word, List<Position>>();
+            var newGame = new GridWithLetters(newLetterGrid, newListOfWords);
             gameService.SetNewGame(newGame);
 
             // When
-            action.Execute(SomeXPosition, SomeYPosition);
-            action.Execute(SomeXPosition, SomeYPosition);
-            var resutl = action.Execute(SomeXPosition, SomeYPosition);
+            selectLetter.Execute(SomeXPosition, SomeYPosition);
+            selectLetter.Execute(SomeXPosition, SomeYPosition);
+            var resutl = selectLetter.Execute(SomeXPosition, SomeYPosition);
 
             // Then
             List<Position> selectedPositions = gameService.SelectedPositions;
@@ -106,13 +106,13 @@ namespace Tests
             // Given
             var SomeXPositionWithError = SomeMaxXPosition + 1;
             var SomeYPositionWithError = SomeMaxYPosition + 1;
-            var newLetterGrid = new LetersGrid(new char[SomeMaxXPosition, SomeMaxYPosition]);
-            var newListOfWords = new List<Word>();
-            var newGame = new Game(newLetterGrid, newListOfWords);
+            var newLetterGrid = new Grid(new char[SomeMaxXPosition, SomeMaxYPosition]);
+            var newListOfWords = new Dictionary<Word, List<Position>>();
+            var newGame = new GridWithLetters(newLetterGrid, newListOfWords);
             gameService.SetNewGame(newGame);
 
             // When - Then
-            Assert.Throws<UnvalidPositionException>(delegate { action.Execute(SomeXPositionWithError, SomeYPositionWithError); } );
+            Assert.Throws<UnvalidPositionException>(delegate { selectLetter.Execute(SomeXPositionWithError, SomeYPositionWithError); } );
        }
 
         [Test]
@@ -121,16 +121,16 @@ namespace Tests
             // Given
             var SomeXPositionWithError = -1;
             var SomeYPositionWithError = -1;
-            var newLetterGrid = new LetersGrid(new char[SomeMaxXPosition, SomeMaxYPosition]);
-            var newListOfWords = new List<Word>();
-            var newGame = new Game(newLetterGrid, newListOfWords);
+            var newLetterGrid = new Grid(new char[SomeMaxXPosition, SomeMaxYPosition]);
+            var newListOfWords = new Dictionary<Word, List<Position>>();
+            var newGame = new GridWithLetters(newLetterGrid, newListOfWords);
             gameService.SetNewGame(newGame);
 
             // When - Then
-            Assert.Throws<UnvalidPositionException>(delegate { action.Execute(SomeXPositionWithError, SomeYPositionWithError); });
+            Assert.Throws<UnvalidPositionException>(delegate { selectLetter.Execute(SomeXPositionWithError, SomeYPositionWithError); });
         }
 
-        [Test][Ignore("Se tiene que refactorizar para que el test pase")]
+        [Test]
         public void Cancel_Unselect_When_Word_Was_Full_Selected()
         {
             // Given
@@ -143,19 +143,19 @@ namespace Tests
             charArray[4, 0] = 'b';
             charArray[5, 0] = 'a';
 
-            var newLetterGrid = new LetersGrid(charArray);
-            var newListOfWords = new List<Word>();
-            var newGame = new Game(newLetterGrid, newListOfWords);
+            var newLetterGrid = new Grid(charArray);
+            var newListOfWords = new Dictionary<Word, List<Position>>();
+            var newGame = new GridWithLetters(newLetterGrid, newListOfWords);
             gameService.SetNewGame(newGame);
 
             // When
-            action.Execute(0, 0);
-            action.Execute(1, 0);
-            action.Execute(2, 0);
-            action.Execute(3, 0);
-            action.Execute(4, 0);
-            action.Execute(5, 0);
-            var resutl = action.Execute(0, 0);
+            selectLetter.Execute(0, 0);
+            selectLetter.Execute(1, 0);
+            selectLetter.Execute(2, 0);
+            selectLetter.Execute(3, 0);
+            selectLetter.Execute(4, 0);
+            selectLetter.Execute(5, 0);
+            var resutl = selectLetter.Execute(0, 0);
 
             // Then
             List<Position> selectedPositions = gameService.SelectedPositions;

@@ -5,7 +5,7 @@ namespace Tests
 {
     public static class PrintGrid
     {
-        public static void Print(LetersGrid dataGrid)
+        public static void Print(GridWithLetters dataGrid)
         {
             string log = string.Empty;
 

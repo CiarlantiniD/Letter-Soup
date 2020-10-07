@@ -2,7 +2,7 @@
 public class ServiceProvider
 {
     public static IRamdomPositionGenerator RamdomPositionGenerator { get; private set; }
-    public static AddWordsLeftToRightService AddWordsLeftToRightService { get; private set; }
+    public static AddWordsToGridLeftToRightService AddWordsLeftToRightService { get; private set; }
     public static FillGridService FillGridService { get; private set; }
     public static IShuffleWordsService ShuffleWordsService { get; private set; }
     public static IGameService GameService { get; private set; }
@@ -10,9 +10,9 @@ public class ServiceProvider
     public ServiceProvider()
     {
         RamdomPositionGenerator = new RamdomPositionGenerator();
-        AddWordsLeftToRightService = new AddWordsLeftToRightService(RamdomPositionGenerator);
+        AddWordsLeftToRightService = new AddWordsToGridLeftToRightService(RamdomPositionGenerator);
         FillGridService = new FillGridService();
         ShuffleWordsService = new ShuffleWordsService();
-        GameService = (IGameService)new GameService();
+        GameService = new GameService();
     }
 }

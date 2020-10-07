@@ -1,34 +1,35 @@
 ﻿using System.Collections.Generic;
 
-public interface AddWordsService
+public interface AddWordsToGridService
 {
-    LetersGrid AddWords(LetersGrid grid, List<Word> words);
+    GridWithLetters AddWords(Grid grid, List<Word> words);
 }
 
-public class AddWordsLeftToRightService : AddWordsService
+public class AddWordsToGridLeftToRightService : AddWordsToGridService
 {
     private readonly IRamdomPositionGenerator ramdomPositionGenerator;
 
-    private LetersGrid newGrid;  
+    private Grid grid;
+    private Dictionary<Word, List<Position>> words = new Dictionary<Word, List<Position>>();
 
-    public AddWordsLeftToRightService(IRamdomPositionGenerator ramdomPositionGenerator)
+    public AddWordsToGridLeftToRightService(IRamdomPositionGenerator ramdomPositionGenerator)
     {
         this.ramdomPositionGenerator = ramdomPositionGenerator;
     }
 
-    public LetersGrid AddWords(LetersGrid grid, List<Word> words)
+    public GridWithLetters AddWords(Grid grid, List<Word> words)
     {
-        newGrid = grid;
+        this.grid = grid;
         ramdomPositionGenerator.SetMaxPosition(new Position(grid.Wight, grid.Height));            
 
         foreach (var word in words)
         {
             Position initialRandomPosition = ramdomPositionGenerator.GetRandomPosition();
             List<Position> positions = GetPositions(word, initialRandomPosition);
-            newGrid.AddWord(word, positions);
+            AddWord(word, positions);
         }
 
-        return newGrid;
+        return new GridWithLetters(this.grid, this.words);
     }
 
     private List<Position> GetPositions(Word word, Position initialPosition)
@@ -51,9 +52,9 @@ public class AddWordsLeftToRightService : AddWordsService
         Position position;
         int x = initialPosition.x;
 
-        for (int y = initialPosition.y; y < newGrid.Height; y++)
+        for (int y = initialPosition.y; y < grid.Height; y++)
         {
-            for (; x < newGrid.Wight; x++)
+            for (; x < grid.Wight; x++)
             {
                 position = new Position(x, y);
 
@@ -63,9 +64,9 @@ public class AddWordsLeftToRightService : AddWordsService
             x = 0;
         }
 
-        for (int y = 0; y < newGrid.Height; y++)
+        for (int y = 0; y < grid.Height; y++)
         {
-            for (; x < newGrid.Wight; x++)
+            for (; x < grid.Wight; x++)
             {
                 position = new Position(x, y);
 
@@ -80,15 +81,40 @@ public class AddWordsLeftToRightService : AddWordsService
     private bool CheckIfValidPlaceForWord(Position position, Word word)
     {
         var maxPositionOfNewWord = position.x + word.Lenght;
-        if (newGrid.Wight < maxPositionOfNewWord)
+        if (grid.Wight < maxPositionOfNewWord)
             return false;
 
         for (int x = position.x; x < maxPositionOfNewWord; x++)
         {
-            if (newGrid.GetLeterInPosition(x, position.y) != SpecialLetters.EMPTY_SPACE)
+            if (grid.GetLeterInPosition(x, position.y) != SpecialLetters.EMPTY_SPACE)
                 return false;
         }
 
         return true;
+    }
+
+    private bool AddWord(Word word, List<Position> positions)
+    {
+        if (word.Lenght != positions.Count)
+            return false;
+
+        AddWordToGrid(word, positions);
+        words.Add(word, positions);
+        return true;
+    }
+
+    private void AddWordToGrid(Word word, List<Position> positions)
+    {
+        char[] charArray = word.ToCharArray();
+
+        for (int i = 0; i < positions.Count; i++)
+        {
+            Position position = positions[i];
+
+            if (grid.Data[position.x, position.y] != SpecialLetters.EMPTY_SPACE)
+                throw new OcupateSpaceOnGridException();
+
+            grid.Data[position.x, position.y] = charArray[i];
+        }
     }
 }

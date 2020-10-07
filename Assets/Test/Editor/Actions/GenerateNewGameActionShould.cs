@@ -11,7 +11,7 @@ namespace Tests
     {
         private GenerateNewGameAction action;
 
-        private AddWordsLeftToRightService addWordsService;
+        private AddWordsToGridLeftToRightService addWordsService;
         private FillGridService fillGridService;
 
         private SomeRandomQueuedPositionGenerator ramdomPositionGenerator;
@@ -25,11 +25,11 @@ namespace Tests
         public void Setup()
         {
             ramdomPositionGenerator = new SomeRandomQueuedPositionGenerator();
-            addWordsService = new AddWordsLeftToRightService(ramdomPositionGenerator);
+            addWordsService = new AddWordsToGridLeftToRightService(ramdomPositionGenerator);
 
             fillGridService = new FillGridService();
             shuffleWordsService = new SomeShuffleWordsService();
-            gameService =  Substitute.For<IGameService>();
+            gameService = new GameService();
             wordsRepository = new InMemoryWordsRepository();
 
             action = new GenerateNewGameAction(addWordsService, fillGridService, shuffleWordsService, gameService, wordsRepository);

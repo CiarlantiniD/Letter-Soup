@@ -15,7 +15,7 @@ public class LetterGridWidget : MonoBehaviour, ILetterGridWidget
         presenter.Load();
     }
 
-    public void SetGrid(LetersGrid letterGridData)
+    public void SetGrid(GridWithLetters letterGridData)
     {
         for (int y = 0; y < 12; y++)
         {

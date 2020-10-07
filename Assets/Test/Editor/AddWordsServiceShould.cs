@@ -6,7 +6,7 @@ namespace Tests
 {
     public class AddWordsServiceShould
     {
-        private AddWordsLeftToRightService addWordsService;
+        private AddWordsToGridLeftToRightService addWordsService;
         private IWordsRepository wordsRepository;
         private SomeRandomQueuedPositionGenerator ramdomPositionGenerator;
         private IShuffleWordsService shuffleWordsService;
@@ -19,14 +19,14 @@ namespace Tests
             ramdomPositionGenerator = new SomeRandomQueuedPositionGenerator();
             shuffleWordsService = new SomeShuffleWordsService();
 
-            addWordsService = new AddWordsLeftToRightService(ramdomPositionGenerator);
+            addWordsService = new AddWordsToGridLeftToRightService(ramdomPositionGenerator);
         }
 
         [Test]
         public void Add_Word_Successfully_In_Zero_Position()
         {
             // Given
-            var grid = new LetersGrid(new char[10, 10]);
+            var grid = new Grid(10, 10);
             wordsRepository.Add(new Word("Uno"));
             ramdomPositionGenerator.SetMaxPosition(new Position(10, 10));
             ramdomPositionGenerator.SetReturnPosition(new Position(0, 0));
@@ -46,7 +46,7 @@ namespace Tests
         public void Add_Word_Successfully_In_Random_Position()
         {
             // Given
-            var grid = new LetersGrid(new char[10, 10]);
+            var grid = new Grid(10, 10);
             wordsRepository.Add(new Word("Uno"));
             ramdomPositionGenerator.SetMaxPosition(new Position(10, 10));
             ramdomPositionGenerator.SetReturnPosition(new Position(5, 5));
@@ -66,7 +66,7 @@ namespace Tests
         public void Add_Words_Successfully_In_Random_Positions()
         {
             // Given
-            var grid = new LetersGrid(new char[10, 10]);
+            var grid = new Grid(10, 10);
             wordsRepository.Add(new Word("Uno"));
             wordsRepository.Add(new Word("Dos"));
             ramdomPositionGenerator.SetMaxPosition(new Position(10, 10));
@@ -90,7 +90,7 @@ namespace Tests
         public void Repositioning_Word_Wiht_New_Position_When_Space_Have_A_Word_In()
         {
             // Given
-            var grid = new LetersGrid(new char[10, 10]);
+            var grid = new Grid(10, 10);
             wordsRepository.Add(new Word("Uno"));
             wordsRepository.Add(new Word("Dos"));
             ramdomPositionGenerator.SetMaxPosition(new Position(10, 10));
@@ -115,7 +115,7 @@ namespace Tests
         public void Repositioning_Word_Wiht_New_Position_When_Word_Do_Not_Fit_In_Grid()
         {
             // Given
-            var grid = new LetersGrid(new char[10, 10]);
+            var grid = new Grid(10, 10);
             wordsRepository.Add(new Word("Uno"));
             ramdomPositionGenerator.SetMaxPosition(new Position(10, 10));
             ramdomPositionGenerator.SetReturnPosition(new Position(8, 5));
@@ -135,7 +135,7 @@ namespace Tests
         public void Throw_FullFillGridException_When_Grid_Is_Full()
         {
             // Given
-            var grid = new LetersGrid(new char[10, 10]);
+            var grid = new Grid(10, 10);
             wordsRepository.Add(new Word("0123456789"));
             wordsRepository.Add(new Word("0123456789"));
             wordsRepository.Add(new Word("0123456789"));
@@ -161,7 +161,7 @@ namespace Tests
             ramdomPositionGenerator.SetReturnPosition(new Position(9, 9));
 
             // When - Then
-            Assert.Throws<FullFillGridException>(() => { addWordsService.AddWords(grid, wordsRepository.GetAll()); } );
+            Assert.Throws<FullFillGridException>(() => { addWordsService.AddWords(grid, wordsRepository.GetAll()); });
         }
     }
 }

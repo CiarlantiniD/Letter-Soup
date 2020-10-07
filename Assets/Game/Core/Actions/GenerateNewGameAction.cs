@@ -2,13 +2,13 @@
 
 public class GenerateNewGameAction
 {
-    private readonly AddWordsLeftToRightService addWordsService;
+    private readonly AddWordsToGridLeftToRightService addWordsService;
     private readonly FillGridService fillGridService;
     private readonly IShuffleWordsService shuffleWordsService;
     private readonly IGameService gameService;
     private readonly IWordsRepository words;
 
-    public GenerateNewGameAction(AddWordsLeftToRightService addWordsService, FillGridService fillGridService, IShuffleWordsService shuffleWordsService, IGameService gameService, IWordsRepository words)
+    public GenerateNewGameAction(AddWordsToGridLeftToRightService addWordsService, FillGridService fillGridService, IShuffleWordsService shuffleWordsService, IGameService gameService, IWordsRepository words)
     {
         this.addWordsService = addWordsService;
         this.fillGridService = fillGridService;
@@ -20,7 +20,8 @@ public class GenerateNewGameAction
     public void Execute(int wight, int height, int minWordsForGrid)
     {
         List<Word> wordsForGame = words.GetAll();
-        LetersGrid grid = new LetersGrid(wight, height);
+        Grid grid = new Grid((uint)wight, (uint)height);
+        GridWithLetters gridWithLetters;
 
         wordsForGame = shuffleWordsService.Shuffle(wordsForGame);
 
@@ -30,9 +31,9 @@ public class GenerateNewGameAction
             wordsForGame.RemoveRange(minWordsForGrid, toremover);
         }
 
-        grid = addWordsService.AddWords(grid, wordsForGame);
-        grid = fillGridService.FillGrid(grid);
+        gridWithLetters = addWordsService.AddWords(grid, wordsForGame);
+        gridWithLetters = fillGridService.FillGrid(gridWithLetters);
 
-        gameService.SetNewGame(new Game(grid, wordsForGame));
+        gameService.SetNewGame(gridWithLetters);
     }
 }

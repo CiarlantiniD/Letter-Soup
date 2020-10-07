@@ -8,7 +8,7 @@ public class GetLetterGridAction
         this.gameService = gameService;
     }
 
-    public LetersGrid Execute()
+    public GridWithLetters Execute()
     {
         return gameService.Grid;
     }
