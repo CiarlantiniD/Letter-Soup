@@ -4,6 +4,7 @@ public class ActionsProvider
     public static SelectLetterAction ClickLetterAction { get; private set; }
     public static GenerateNewGameAction GenerateNewGameAction { get; private set; }
     public static GetLetterGridAction GetLetterGridAction { get; private set; }
+    public static GetGameWordsAction GetGameWordsAction { get; private set; }
 
     public ActionsProvider()
     {
@@ -17,5 +18,7 @@ public class ActionsProvider
             RepositoryProvider.WordsRepository);
 
         GetLetterGridAction = new GetLetterGridAction(ServiceProvider.GameService);
+
+        GetGameWordsAction = new GetGameWordsAction(ServiceProvider.GameService);
     }
 }

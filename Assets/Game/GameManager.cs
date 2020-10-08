@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private LetterGridWidget letterGridWidget;
+    [SerializeField] private ShowGameWords showGameWordsWidget;
 
     private ServiceProvider serviceProvider;
     private RepositoryProvider repositoryProvider;
@@ -31,5 +32,6 @@ public class GameManager : MonoBehaviour
 
         ActionsProvider.GenerateNewGameAction.Execute(12, 12, 5);
         letterGridWidget.Load();
+        showGameWordsWidget.Load(ActionsProvider.GetGameWordsAction.Execute());
     }
 }
