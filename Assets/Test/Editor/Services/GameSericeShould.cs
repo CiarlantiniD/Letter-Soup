@@ -18,11 +18,11 @@ namespace Tests
                 {new Word("six"), new List<Position>{new Position(0,2), new Position(1, 2), new Position(2, 2) } }
             };
 
-        private readonly char[,] SomeCharArray = new char[3, 3]
+        private readonly char[,] SomeCharArray = new char[3, 4]
             {
-                {'u','n','o' },
-                {'d','o','s' },
-                {'s','i','x' }
+                {'u','n','o','z' },
+                {'d','o','s','z' },
+                {'s','i','x','z' }
             };
 
         private GridWithLetters GridWithLetters;
@@ -40,6 +40,20 @@ namespace Tests
         {
             // Given
             var position = new Position(0, 0);
+            gameService.SetNewGame(GridWithLetters);
+
+            // When
+            var resutl = gameService.SelectLetterPosition(position);
+
+            // Then
+            Assert.IsTrue(LetterStateType.Selected == resutl.GetState());
+        }
+
+        [Test]
+        public void Save_Selected_Position_When_Letter_Is_Not_A_Game_Word()
+        {
+            // Given
+            var position = new Position(4, 0);
             gameService.SetNewGame(GridWithLetters);
 
             // When
