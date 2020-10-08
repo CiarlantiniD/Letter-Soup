@@ -1,9 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
+public enum LetterStateType
+{
+    Selected = 0,
+    Unselected
+}
 
 public class LetterState
 {
     private LetterStateType type;
+
+    public LetterState(LetterStateType type)
+    {
+        this.type = type;
+    }
 
     public void SetSelected()
     {
@@ -21,8 +30,3 @@ public class LetterState
     }
 }
 
-public enum LetterStateType
-{
-    Selected = 0,
-    Unselected
-}

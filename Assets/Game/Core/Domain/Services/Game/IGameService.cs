@@ -3,7 +3,7 @@
 public interface IGameService
 {
     GridWithLetters Grid { get; }
-    List<Position> SelectedPositions { get; }
+    List<SerieDePosiciones> SerieDePosiciones { get; }
 
     void SetNewGame(GridWithLetters grid);
     LetterState SelectLetterPosition(Position position);
