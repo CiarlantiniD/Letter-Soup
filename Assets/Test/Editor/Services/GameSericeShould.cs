@@ -30,7 +30,7 @@ namespace Tests
         [SetUp]
         public void Setup()
         {
-            GridWithLetters = new GridWithLetters(new Grid(SomeCharArray), SomeWordsPositions);
+            GridWithLetters = new GridWithLetters(new Grid<char>(SomeCharArray), SomeWordsPositions);
             Logger.SetProvider(new UnityLogger());
             gameService = new GameService();
         }

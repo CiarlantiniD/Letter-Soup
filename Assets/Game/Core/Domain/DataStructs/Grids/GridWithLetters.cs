@@ -4,10 +4,10 @@ public class GridWithLetters
 {
     public int Wight => Grid.Wight;
     public int Height => Grid.Height;
-    public Grid Grid { get; }
+    public Grid<char> Grid { get; }
     public Dictionary<Word, List<Position>> Words { get; }
 
-    public GridWithLetters(Grid grid, Dictionary<Word, List<Position>> words)
+    public GridWithLetters(Grid<char> grid, Dictionary<Word, List<Position>> words)
     {
         Grid = grid;
         Words = words;
@@ -15,6 +15,6 @@ public class GridWithLetters
 
     public char GetLeterInPosition(int x, int y)
     {
-        return Grid.GetLeterInPosition(x, y);
+        return Grid.GetInPosition(x, y);
     }
 }

@@ -1,21 +1,21 @@
 ﻿
-public class Grid
+public class Grid<T>
 {
-    public char[,] Data { get; }
+    public T[,] Data { get; private set; }
     public int Wight => Data.GetLength(0);
     public int Height => Data.GetLength(1);
 
-    public Grid(char [,] data)
+    public Grid(T [,] data)
     {
         Data = data;
     }
 
     public Grid(uint wight, uint height)
     {
-        Data = new char[wight, height];
+        Data = new T[wight, height];
     }
 
-    public char GetLeterInPosition(int x, int y)
+    public T GetInPosition(int x, int y)
     {
         return Data[x, y];
     }

@@ -2,14 +2,14 @@
 
 public interface AddWordsToGridService
 {
-    GridWithLetters AddWords(Grid grid, List<Word> words);
+    GridWithLetters AddWords(Grid<char> grid, List<Word> words);
 }
 
 public class AddWordsToGridLeftToRightService : AddWordsToGridService
 {
     private readonly IRamdomPositionGenerator ramdomPositionGenerator;
 
-    private Grid grid;
+    private Grid<char> grid;
     private Dictionary<Word, List<Position>> words = new Dictionary<Word, List<Position>>();
 
     public AddWordsToGridLeftToRightService(IRamdomPositionGenerator ramdomPositionGenerator)
@@ -17,7 +17,7 @@ public class AddWordsToGridLeftToRightService : AddWordsToGridService
         this.ramdomPositionGenerator = ramdomPositionGenerator;
     }
 
-    public GridWithLetters AddWords(Grid grid, List<Word> words)
+    public GridWithLetters AddWords(Grid<char> grid, List<Word> words)
     {
         this.grid = grid;
         ramdomPositionGenerator.SetMaxPosition(new Position(grid.Wight, grid.Height));            
@@ -86,7 +86,7 @@ public class AddWordsToGridLeftToRightService : AddWordsToGridService
 
         for (int x = position.x; x < maxPositionOfNewWord; x++)
         {
-            if (grid.GetLeterInPosition(x, position.y) != SpecialLetters.EMPTY_SPACE)
+            if (grid.GetInPosition(x, position.y) != SpecialLetters.EMPTY_SPACE)
                 return false;
         }
 

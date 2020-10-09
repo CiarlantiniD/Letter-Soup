@@ -22,6 +22,6 @@ public class FillGridService
             }
         }
 
-        return new GridWithLetters(new Grid(newGrid), grid.Words);
+        return new GridWithLetters(new Grid<char>(newGrid), grid.Words);
     }
 }

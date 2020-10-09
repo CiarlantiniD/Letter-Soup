@@ -20,7 +20,7 @@ public class GenerateNewGameAction
     public void Execute(int wight, int height, int minWordsForGrid)
     {
         List<Word> wordsForGame = words.GetAll();
-        Grid grid = new Grid((uint)wight, (uint)height);
+        Grid<char> grid = new Grid<char>((uint)wight, (uint)height);
         GridWithLetters gridWithLetters;
 
         wordsForGame = shuffleWordsService.Shuffle(wordsForGame);

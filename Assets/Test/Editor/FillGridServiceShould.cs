@@ -20,7 +20,7 @@ namespace Tests
         public void FillGridServiceShouldSimplePasses()
         {
             // Given
-            GridWithLetters dataGrid = new GridWithLetters(new Grid(3,3), new Dictionary<Word, List<Position>>());
+            GridWithLetters dataGrid = new GridWithLetters(new Grid<char>(3,3), new Dictionary<Word, List<Position>>());
 
             // When
             var result = fillGridService.FillGrid(dataGrid);
