@@ -17,6 +17,11 @@ public class Grid<T>
 
     public T GetInPosition(int x, int y)
     {
-        return Data[x, y];
+        return Data[x,y];
+    }
+
+    public void SetValueInPosition(int x, int y, T value)
+    {
+        Data[x,y] = value;
     }
 }

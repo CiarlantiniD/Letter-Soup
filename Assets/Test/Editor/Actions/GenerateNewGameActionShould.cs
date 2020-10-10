@@ -16,6 +16,7 @@ namespace Tests
 
         private SomeRandomQueuedPositionGenerator ramdomPositionGenerator;
         private IShuffleWordsService shuffleWordsService;
+        private ISelectionPositionService selectionPositionService;
         private IGameService gameService;
         private IWordsRepository wordsRepository;
 
@@ -29,7 +30,8 @@ namespace Tests
 
             fillGridService = new FillGridService();
             shuffleWordsService = new SomeShuffleWordsService();
-            gameService = new GameService();
+            selectionPositionService = new SelectionPositionService();
+            gameService = new GameService(selectionPositionService);
             wordsRepository = new InMemoryWordsRepository();
 
             action = new GenerateNewGameAction(addWordsService, fillGridService, shuffleWordsService, gameService, wordsRepository);

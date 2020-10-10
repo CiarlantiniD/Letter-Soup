@@ -10,6 +10,7 @@ namespace Tests
     public class GameSericeShould
     {
         private IGameService gameService;
+        private ISelectionPositionService selectionPositionService;
 
         private static Dictionary<Word, List<Position>> SomeWordsPositions = new Dictionary<Word, List<Position>>()
             {
@@ -32,7 +33,8 @@ namespace Tests
         {
             GridWithLetters = new GridWithLetters(new Grid<char>(SomeCharArray), SomeWordsPositions);
             Logger.SetProvider(new UnityLogger());
-            gameService = new GameService();
+            selectionPositionService = new SelectionPositionService();
+            gameService = new GameService(selectionPositionService);
         }
 
         [Test]
@@ -53,7 +55,7 @@ namespace Tests
         public void Save_Selected_Position_When_Letter_Is_Not_A_Game_Word()
         {
             // Given
-            var position = new Position(4, 0);
+            var position = new Position(0, 3);
             gameService.SetNewGame(GridWithLetters);
 
             // When
@@ -61,6 +63,21 @@ namespace Tests
 
             // Then
             Assert.IsTrue(LetterStateType.Selected == resutl.GetState());
+        }
+
+        [Test] 
+        public void Sava_UnSelected_Position_When_Letter_Is_Not_A_Game_Word()
+        {
+            // Given
+            var position = new Position(0,3);
+            gameService.SetNewGame(GridWithLetters);
+
+            // When
+            gameService.SelectLetterPosition(position);
+            var resutl = gameService.SelectLetterPosition(position);
+
+            // Then
+            Assert.IsTrue(LetterStateType.Unselected == resutl.GetState());
         }
 
         [Test]

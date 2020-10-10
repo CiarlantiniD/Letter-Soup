@@ -5,6 +5,7 @@ public class ServiceProvider
     public static AddWordsToGridLeftToRightService AddWordsLeftToRightService { get; private set; }
     public static FillGridService FillGridService { get; private set; }
     public static IShuffleWordsService ShuffleWordsService { get; private set; }
+    public static ISelectionPositionService SelectionPositionService { get; private set; }
     public static IGameService GameService { get; private set; }
 
     public ServiceProvider()
@@ -13,6 +14,7 @@ public class ServiceProvider
         AddWordsLeftToRightService = new AddWordsToGridLeftToRightService(RamdomPositionGenerator);
         FillGridService = new FillGridService();
         ShuffleWordsService = new ShuffleWordsService();
-        GameService = new GameService();
+        SelectionPositionService = new SelectionPositionService();
+        GameService = new GameService(SelectionPositionService);
     }
 }

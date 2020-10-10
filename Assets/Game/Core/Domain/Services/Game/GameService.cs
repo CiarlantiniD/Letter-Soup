@@ -1,16 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
+﻿
 public class GameService : IGameService
 {
     public GridWithLetters Grid { get; private set; }
-    public List<SerieDePosiciones> SerieDePosiciones { get; private set; } = new List<SerieDePosiciones>();
+
+    private readonly ISelectionPositionService selectionPositionService;
+
+
+    public GameService(ISelectionPositionService selectionPositionService)
+    {
+        this.selectionPositionService = selectionPositionService;
+    }
 
     public void SetNewGame(GridWithLetters grid)
     {
         Grid = grid;
-        Grid.Words.Values.ToList().ForEach(listOfPositions => SerieDePosiciones.Add(new SerieDePosiciones(listOfPositions)));
+        selectionPositionService.SetGridWithLetters(grid);
     }
 
     public LetterState SelectLetterPosition(Position position)
@@ -21,12 +25,6 @@ public class GameService : IGameService
         if (position.x > Grid.Wight && position.y > Grid.Height)
             throw new UnvalidPositionException();
 
-        foreach (var serie in SerieDePosiciones)
-        {
-           if(serie.HavePosition(position))
-                return serie.PickInPosition(position);
-        }
-
-        throw new Exception("No encontor la posicion");
+        return selectionPositionService.SelectPosition(position);
     }
 }
