@@ -11,8 +11,13 @@ public class LetterGridWidgetPresenter
         this.view = view;
     }
 
+    public void Load()
+    {
+        view.SetLettersGridPosition(ActionsProvider.GetLetterGridAction.Execute());
+    }
+
     public void OnNewGame()
     {
-        view.SetGrid(ActionsProvider.GetLetterGridAction.Execute());
+        view.SetLettersGrid(ActionsProvider.GetLetterGridAction.Execute());
     }
 }
