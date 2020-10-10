@@ -16,6 +16,7 @@ public class SelectionPositionService : ISelectionPositionService
 
     public void SetGridWithLetters(GridWithLetters grid)
     {
+        SerieDePosiciones.Clear();
         CreateGridWithUnselectedPositions(grid);
         grid.Words.Values.ToList().ForEach(listOfPositions => SerieDePosiciones.Add(new SerieDePosiciones(listOfPositions)));
     }

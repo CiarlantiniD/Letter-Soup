@@ -11,7 +11,7 @@ public class LetterGridWidgetPresenter
         this.view = view;
     }
 
-    public void Load()
+    public void OnNewGame()
     {
         view.SetGrid(ActionsProvider.GetLetterGridAction.Execute());
     }

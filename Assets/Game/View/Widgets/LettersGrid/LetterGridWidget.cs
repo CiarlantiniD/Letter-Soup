@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,7 +13,11 @@ public class LetterGridWidget : MonoBehaviour, ILetterGridWidget
     public void Load()
     {
         presenter = new LetterGridWidgetPresenter(this);
-        presenter.Load();
+    }
+
+    public void OnNewGame()
+    {
+        presenter.OnNewGame();
     }
 
     public void SetGrid(GridWithLetters letterGridData)

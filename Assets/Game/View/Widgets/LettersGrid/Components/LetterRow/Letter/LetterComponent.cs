@@ -34,6 +34,7 @@ public class LetterComponent : MonoBehaviour, ILetterComponent
     public void SetLetter(char newLetter)
     {
         letter.text = newLetter.ToString();
+        ShowUnselected();
     }
 
     public void ShowSelected()

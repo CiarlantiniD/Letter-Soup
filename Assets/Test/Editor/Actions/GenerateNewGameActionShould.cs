@@ -38,7 +38,7 @@ namespace Tests
         }
 
         [Test]
-        public void GenerateGridWithWordsActionShouldSimplePasses()
+        public void Generate_New_Game()
         {
             // Given
             wordsRepository.Add(new Word("Uno"));
@@ -113,6 +113,12 @@ namespace Tests
 
             //// Then
             Assert.IsTrue(ramdomPositionGenerator.Count == 2);
+        }
+
+        [Test]
+        void Reset_Game_When_Call_It_Again()
+        {
+
         }
     }
 }

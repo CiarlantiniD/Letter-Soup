@@ -20,6 +20,7 @@ public class AddWordsToGridLeftToRightService : AddWordsToGridService
     public GridWithLetters AddWords(Grid<char> grid, List<Word> words)
     {
         this.grid = grid;
+        this.words.Clear();
         ramdomPositionGenerator.SetMaxPosition(new Position(grid.Wight, grid.Height));            
 
         foreach (var word in words)

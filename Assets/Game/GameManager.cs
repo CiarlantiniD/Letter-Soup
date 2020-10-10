@@ -6,10 +6,15 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private LetterGridWidget letterGridWidget;
     [SerializeField] private ShowGameWords showGameWordsWidget;
+    [SerializeField] private ResetGameWidget resetGameWidget;
 
     private ServiceProvider serviceProvider;
     private RepositoryProvider repositoryProvider;
     private ActionsProvider actionsProvider;
+
+    public static readonly int Wight = 12;
+    public static readonly int Height = 12;
+    public static readonly int CountWords = 5;
 
     void Start()
     {
@@ -30,8 +35,16 @@ public class GameManager : MonoBehaviour
         RepositoryProvider.WordsRepository.Add(new Word("critico"));
         RepositoryProvider.WordsRepository.Add(new Word("norte"));
 
+        ActionsProvider.GenerateNewGameAction.OnGameReset += NewGame;
         ActionsProvider.GenerateNewGameAction.Execute(12, 12, 5);
         letterGridWidget.Load();
-        showGameWordsWidget.Load(ActionsProvider.GetGameWordsAction.Execute());
+        resetGameWidget.Load();
+        NewGame();
+    }
+
+    private void NewGame()
+    {
+        letterGridWidget.OnNewGame();
+        showGameWordsWidget.OnNewGame(ActionsProvider.GetGameWordsAction.Execute());
     }
 }

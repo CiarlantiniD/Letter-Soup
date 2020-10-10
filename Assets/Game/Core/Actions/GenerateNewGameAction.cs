@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System;
 
 public class GenerateNewGameAction
 {
@@ -7,6 +8,9 @@ public class GenerateNewGameAction
     private readonly IShuffleWordsService shuffleWordsService;
     private readonly IGameService gameService;
     private readonly IWordsRepository words;
+
+    private bool haveGameActive;
+    public Action OnGameReset;
 
     public GenerateNewGameAction(AddWordsToGridLeftToRightService addWordsService, FillGridService fillGridService, IShuffleWordsService shuffleWordsService, IGameService gameService, IWordsRepository words)
     {
@@ -35,5 +39,7 @@ public class GenerateNewGameAction
         gridWithLetters = fillGridService.FillGrid(gridWithLetters);
 
         gameService.SetNewGame(gridWithLetters);
+        if (haveGameActive) OnGameReset?.Invoke();
+        haveGameActive = true;
     }
 }
