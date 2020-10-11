@@ -6,6 +6,7 @@ public interface ISelectionPositionService
 {
     void SetGridWithLetters(GridWithLetters grid);
     LetterState SelectPosition(Position position);
+    bool HaveAllWordsPicked();
 }
 
 public class SelectionPositionService : ISelectionPositionService
@@ -81,5 +82,16 @@ public class SelectionPositionService : ISelectionPositionService
     private void SaveStatePosition(Position position, LetterState state)
     {
         grid.SetValueInPosition(position.x, position.y, state);
+    }
+
+    public bool HaveAllWordsPicked()
+    {
+        foreach (var posiciones in SerieDePosiciones)
+        {
+            if (posiciones.IsBlocked == false)
+                return false;
+        }
+
+        return true;
     }
 }

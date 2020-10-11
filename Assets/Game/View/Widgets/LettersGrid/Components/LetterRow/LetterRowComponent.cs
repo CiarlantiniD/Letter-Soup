@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,5 +15,15 @@ public class LetterRowComponent : MonoBehaviour
     public void SetLetterInPosition(int x, char newLetter)
     {
         letters[x].SetLetter(newLetter);
+    }
+
+    internal void SetHightlightLetter(int x)
+    {
+        letters[x].HightlightLetter();
+    }
+
+    internal void TurnnOff(int x)
+    {
+        letters[x].TurnOff();
     }
 }

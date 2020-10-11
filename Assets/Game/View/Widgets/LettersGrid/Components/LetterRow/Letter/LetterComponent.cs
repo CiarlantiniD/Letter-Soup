@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,7 @@ public class LetterComponent : MonoBehaviour, ILetterComponent
 
     private Color typeClickLetterSelected = Color.blue;
     private Color typeClickLetterUnselected = Color.white;
+    private Color hightlight = Color.yellow;
 
     private int x;
     private int y;
@@ -34,16 +36,33 @@ public class LetterComponent : MonoBehaviour, ILetterComponent
     public void SetLetter(char newLetter)
     {
         letter.text = newLetter.ToString();
+        button.interactable = true;
         ShowUnselected();
     }
 
     public void ShowSelected()
     {
         background.color = typeClickLetterSelected;
+        letter.color = Color.white;
     }
 
     public void ShowUnselected()
     {
         background.color = typeClickLetterUnselected;
+        letter.color = Color.black;
+    }
+
+    public void TurnOff()
+    {
+        button.interactable = false;
+        background.color = Color.grey; ;
+        letter.color = Color.black;
+    }
+
+    internal void HightlightLetter()
+    {
+        background.color = hightlight;
+        button.interactable = false;
+        letter.color = Color.black;
     }
 }

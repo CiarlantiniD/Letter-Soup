@@ -21,6 +21,11 @@ public class LetterGridWidget : MonoBehaviour, ILetterGridWidget
         presenter.OnNewGame();
     }
 
+    public void OnWinGame()
+    {
+        presenter.OnWinGame();
+    }
+
     public void SetLettersGridPosition(GridWithLetters letterGridData)
     {
         for (int y = 0; y < 12; y++)
@@ -41,5 +46,21 @@ public class LetterGridWidget : MonoBehaviour, ILetterGridWidget
                 letterRows[y].SetLetterInPosition(x, letterGridData.GetLeterInPosition(x, y));
             }
         }
+    }
+
+    public void TurnOffAll()
+    {
+        for (int y = 0; y < 12; y++)
+        {
+            for (int x = 0; x < 12; x++)
+            {
+                letterRows[y].TurnnOff(x);
+            }
+        }
+    }
+
+    public void HightlightLetter(Position position)
+    {
+        letterRows[position.y].SetHightlightLetter(position.x);
     }
 }

@@ -39,7 +39,11 @@ public class GenerateNewGameAction
         gridWithLetters = fillGridService.FillGrid(gridWithLetters);
 
         gameService.SetNewGame(gridWithLetters);
-        if (haveGameActive) OnGameReset?.Invoke();
+
+        if (haveGameActive)
+            OnGameReset?.Invoke();
+        
+        Logger.Log("-- New Game --");
         haveGameActive = true;
     }
 }

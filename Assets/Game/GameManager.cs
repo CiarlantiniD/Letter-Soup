@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
         RepositoryProvider.WordsRepository.Add(new Word("critico"));
         RepositoryProvider.WordsRepository.Add(new Word("norte"));
 
+        ActionsProvider.ClickLetterAction.OnWinGame += WinGame;
         ActionsProvider.GenerateNewGameAction.OnGameReset += NewGame;
         ActionsProvider.GenerateNewGameAction.Execute(12, 12, 5);
         letterGridWidget.Load();
@@ -46,5 +47,10 @@ public class GameManager : MonoBehaviour
     {
         letterGridWidget.OnNewGame();
         showGameWordsWidget.OnNewGame(ActionsProvider.GetGameWordsAction.Execute());
+    }
+
+    private void WinGame()
+    {
+        letterGridWidget.OnWinGame();
     }
 }

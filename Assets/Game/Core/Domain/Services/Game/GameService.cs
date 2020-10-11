@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 public class GameService : IGameService
 {
     public GridWithLetters Grid { get; private set; }
@@ -26,5 +28,10 @@ public class GameService : IGameService
             throw new UnvalidPositionException();
 
         return selectionPositionService.SelectPosition(position);
+    }
+
+    public bool CheckIfWin()
+    {
+        return selectionPositionService.HaveAllWordsPicked();
     }
 }
