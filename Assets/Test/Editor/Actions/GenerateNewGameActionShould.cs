@@ -18,7 +18,7 @@ namespace Tests
         private IShuffleWordsService shuffleWordsService;
         private ISelectionPositionService selectionPositionService;
         private IGameService gameService;
-        private IWordsRepository wordsRepository;
+        private InMemoryWordsRepository wordsRepository;
 
         private static string SomeWord = "SomeWord";
 
@@ -116,9 +116,27 @@ namespace Tests
         }
 
         [Test]
-        void Reset_Game_When_Call_It_Again()
+        public void Reset_Game_When_Call_It_Again()
         {
+            // Given
+            ramdomPositionGenerator.SetMaxPosition(new Position(4, 4));
 
+            wordsRepository.Add(new Word("Uno"));
+            ramdomPositionGenerator.SetReturnPosition(new Position(0, 0));
+            action.Execute(3, 3, 1);
+
+            wordsRepository.CleanAll();
+            wordsRepository.Add(new Word("Dos"));
+            ramdomPositionGenerator.SetReturnPosition(new Position(0, 0));
+
+            // When
+            action.Execute(3, 3, 1);
+
+            // Then
+            var result = gameService.Grid;
+            Assert.IsTrue(result.GetLeterInPosition(0, 0) == 'D');
+            Assert.IsTrue(result.GetLeterInPosition(1, 0) == 'o');
+            Assert.IsTrue(result.GetLeterInPosition(2, 0) == 's');
         }
     }
 }

@@ -13,4 +13,9 @@ public class InMemoryWordsRepository : IWordsRepository
     {
         return repository;
     }
+
+    public void CleanAll()
+    {
+        repository.Clear();
+    }
 }
