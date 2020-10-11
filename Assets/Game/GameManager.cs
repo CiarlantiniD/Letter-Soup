@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private LetterGridWidget letterGridWidget;
     [SerializeField] private ShowGameWords showGameWordsWidget;
     [SerializeField] private ResetGameWidget resetGameWidget;
+    [SerializeField] private WinPopUpWidget winPopUpWidget;
 
     private ServiceProvider serviceProvider;
     private RepositoryProvider repositoryProvider;
@@ -34,12 +35,17 @@ public class GameManager : MonoBehaviour
         RepositoryProvider.WordsRepository.Add(new Word("marciano"));
         RepositoryProvider.WordsRepository.Add(new Word("critico"));
         RepositoryProvider.WordsRepository.Add(new Word("norte"));
+        RepositoryProvider.WordsRepository.Add(new Word("arena"));
+        RepositoryProvider.WordsRepository.Add(new Word("egipto"));
+        RepositoryProvider.WordsRepository.Add(new Word("auto"));
+        RepositoryProvider.WordsRepository.Add(new Word("dinosaurio"));
 
         ActionsProvider.ClickLetterAction.OnWinGame += WinGame;
         ActionsProvider.GenerateNewGameAction.OnGameReset += NewGame;
         ActionsProvider.GenerateNewGameAction.Execute(12, 12, 5);
         letterGridWidget.Load();
         resetGameWidget.Load();
+        winPopUpWidget.Load();
         NewGame();
     }
 
@@ -52,5 +58,6 @@ public class GameManager : MonoBehaviour
     private void WinGame()
     {
         letterGridWidget.OnWinGame();
+        winPopUpWidget.OpenPopUp();
     }
 }

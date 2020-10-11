@@ -15,5 +15,6 @@ public class ResetGameWidgetPresenter
     public void ResetGame()
     {
         generateNewGameAction.Execute(GameManager.Wight,GameManager.Height, GameManager.CountWords);
+        view.NotifyResetGame();
     }
 }

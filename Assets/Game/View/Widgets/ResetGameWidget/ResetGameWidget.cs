@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class ResetGameWidget : MonoBehaviour, IResetGameWidget
 {
     [SerializeField] private Button resetButton;
+
+    public event Action OnResetGame;
 
     private ResetGameWidgetPresenter presenter;
 
@@ -20,4 +22,8 @@ public class ResetGameWidget : MonoBehaviour, IResetGameWidget
         presenter.ResetGame();
     }
 
+    public void NotifyResetGame()
+    {
+        OnResetGame?.Invoke();
+    }
 }
